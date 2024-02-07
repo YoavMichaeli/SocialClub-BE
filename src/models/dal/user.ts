@@ -99,6 +99,18 @@ function findOne(obj, cb) {
   });
 }
 
+function asyncFindOne(obj) {
+  return new Promise((resolve, reject) => {
+  User.findOne(obj).exec((err, user) => {
+    if (user) {
+      resolve(user);
+    } else if(err) {
+      reject(false);
+    }
+  });
+});
+}
+
 
 function findById(id, cb) {
   User.findById(id).exec((err, user) => {
@@ -147,13 +159,16 @@ function getAll(cb) {
 }
 
 function deleteOne(opt, cb) {
+  return new Promise((resolve, reject) => {
   User.deleteOne(opt).exec((err, res) => {
-    if (err) return cb(err, null);
-    else if (res.n == 0) {
-      return cb(null, true);
+    if (err) reject(err);
+    else{
+      resolve(true);
     }
   });
+});
 }
+
 function comment(user, comment, _id, cb) {
   User.findOne(user).exec((err, obj) => {
     if (!obj) return cb("Does not exist.", null);
@@ -200,6 +215,7 @@ module.exports = {
   editUser: editUser,
   checkUser: checkUser,
   findOne: findOne,
+  asyncFindOne: asyncFindOne,
   findById: findById,
   deleteOne: deleteOne,
   asyncFindById: asyncFindById,
