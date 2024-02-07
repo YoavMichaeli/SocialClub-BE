@@ -98,7 +98,9 @@ router.post("/upload", upload.single('file'), function (req, res, next) {
       if (err) throw err;
       console.log("Post saved");
       // Redirect back after the job is done.
-      res.status(StatusCodes.CREATED).send("Post saved successfully");
+     res.status(StatusCodes.CREATED).json({message: "Post saved successfully",
+      postId: uploadedFile.filename.split('_')[0]
+    });
     });
   });
 });
