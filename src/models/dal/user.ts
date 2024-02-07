@@ -44,4 +44,28 @@ function createNew(obj, cb) {
   }
 }
 
-
+function editUser(obj, cb) {
+  if (checkSpace(obj.username)) {
+    return cb(null, false);
+  } else {
+    User.findOne({ username: obj.username }).exec((err, user) => {
+      if (user) {
+        for (var key=0; key< Object.keys(obj).length; key++) {
+          let currentKey = Object.keys(obj)[key];
+          if (Array.isArray(user[currentKey])) {
+            user[currentKey].push(obj[currentKey]);
+          }else {
+            user[currentKey] = obj[currentKey];
+          }
+          
+        }
+        user.save((err, res) => {
+          return cb(err, res);
+        });
+        
+      } else {
+        return cb(null, false);
+      }
+    });
+  }
+}
