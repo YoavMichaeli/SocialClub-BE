@@ -27,3 +27,14 @@ router.get("/getAllUsersPosts", async function (req, res, next) {
     });
   });
 });
+
+router.get("/myposts", function (req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>
+  const payload = jwt.decode(token, { complete: true }).payload;
+  db.findOne({ username: payload.user }, (err, user) => {
+    res.status(200).json({
+      posts: user.posts,
+    });
+  });
+});
